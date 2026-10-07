@@ -34,7 +34,7 @@ public sealed class LinqChainComplexityAnalyzer : DiagnosticAnalyzer
     {
         var invocation = (InvocationExpressionSyntax)context.Node;
 
-        if (IsReceiverOfInvocation(invocation))
+        if (IsReceiverOfLinqInvocation(invocation, context.SemanticModel))
         {
             return;
         }
@@ -113,10 +113,13 @@ public sealed class LinqChainComplexityAnalyzer : DiagnosticAnalyzer
         return score;
     }
 
-    private static bool IsReceiverOfInvocation(InvocationExpressionSyntax invocation) =>
+    private static bool IsReceiverOfLinqInvocation(
+        InvocationExpressionSyntax invocation,
+        SemanticModel semanticModel) =>
         invocation.Parent is MemberAccessExpressionSyntax memberAccess
         && memberAccess.Expression == invocation
-        && memberAccess.Parent is InvocationExpressionSyntax;
+        && memberAccess.Parent is InvocationExpressionSyntax parentInvocation
+        && TryGetLinqMethodName(parentInvocation, semanticModel, out _);
 
     private static InvocationExpressionSyntax? GetReceiverInvocation(InvocationExpressionSyntax invocation) =>
         invocation.Expression is MemberAccessExpressionSyntax memberAccess

@@ -71,6 +71,11 @@ public sealed class ExpressionNestingAnalyzer : DiagnosticAnalyzer
 
             while (current is not null)
             {
+                if (current is AnonymousFunctionExpressionSyntax && current != expression)
+                {
+                    break;
+                }
+
                 if (current is ExpressionSyntax currentExpression && ContributesDepth(currentExpression))
                 {
                     depth++;
@@ -96,5 +101,6 @@ public sealed class ExpressionNestingAnalyzer : DiagnosticAnalyzer
         and not ThisExpressionSyntax
         and not BaseExpressionSyntax
         and not MemberAccessExpressionSyntax
-        and not ParenthesizedExpressionSyntax;
+        and not ParenthesizedExpressionSyntax
+        and not AnonymousFunctionExpressionSyntax;
 }

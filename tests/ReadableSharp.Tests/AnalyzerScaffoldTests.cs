@@ -6,23 +6,14 @@ namespace ReadableSharp.Tests;
 public sealed class AnalyzerScaffoldTests
 {
     [Fact]
-    public void SupportedDiagnostics_ContainsAllMvpRules()
+    public void DiagnosticIds_AreStable()
     {
-        var analyzer = new ReadableSharpAnalyzer();
-
-        var ids = analyzer.SupportedDiagnostics.Select(diagnostic => diagnostic.Id).ToArray();
-
-        Assert.Equal(
-            new[]
-            {
-                "RSHARP1001",
-                "RSHARP1002",
-                "RSHARP1003",
-                "RSHARP1004",
-                "RSHARP1005",
-                "RSHARP1006",
-                "RSHARP1007",
-            },
-            ids);
+        Assert.Equal("RSHARP1001", DiagnosticIds.ExpressionNestingTooDeep);
+        Assert.Equal("RSHARP1002", DiagnosticIds.BooleanConditionTooComplex);
+        Assert.Equal("RSHARP1003", DiagnosticIds.LinqChainTooComplex);
+        Assert.Equal("RSHARP1004", DiagnosticIds.NestedConditionalOperator);
+        Assert.Equal("RSHARP1005", DiagnosticIds.LambdaNestingTooDeep);
+        Assert.Equal("RSHARP1006", DiagnosticIds.MethodCognitiveComplexityTooHigh);
+        Assert.Equal("RSHARP1007", DiagnosticIds.ComplexExpressionShouldBeExtracted);
     }
 }

@@ -13,6 +13,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <NoWarn>$(NoWarn);RS2002</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

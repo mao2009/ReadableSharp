@@ -62,12 +62,29 @@ public sealed class ExpressionNestingAnalyzer : DiagnosticAnalyzer
 
     private static int MeasureDepth(ExpressionSyntax expression, int parentDepth)
     {
-        var currentDepth = parentDepth + (ContributesDepth(expression) ? 1 : 0);
-        var maxDepth = currentDepth;
+        var maxDepth = parentDepth;
 
-        foreach (var child in expression.ChildNodes().OfType<ExpressionSyntax>())
+        foreach (var candidate in expression.DescendantNodesAndSelf().OfType<ExpressionSyntax>())
         {
-            maxDepth = Math.Max(maxDepth, MeasureDepth(child, currentDepth));
+            var depth = parentDepth;
+            SyntaxNode? current = candidate;
+
+            while (current is not null)
+            {
+                if (current is ExpressionSyntax currentExpression && ContributesDepth(currentExpression))
+                {
+                    depth++;
+                }
+
+                if (current == expression)
+                {
+                    break;
+                }
+
+                current = current.Parent;
+            }
+
+            maxDepth = Math.Max(maxDepth, depth);
         }
 
         return maxDepth;

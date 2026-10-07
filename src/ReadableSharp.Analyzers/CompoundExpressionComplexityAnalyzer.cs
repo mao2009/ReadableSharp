@@ -188,5 +188,16 @@ public sealed class CompoundExpressionComplexityAnalyzer : DiagnosticAnalyzer
         and not MemberAccessExpressionSyntax
         and not ParenthesizedExpressionSyntax;
 
-    private sealed record Metrics(int Score, IReadOnlyList<string> Contributors);
+    private sealed class Metrics
+    {
+        public Metrics(int score, IReadOnlyList<string> contributors)
+        {
+            Score = score;
+            Contributors = contributors;
+        }
+
+        public int Score { get; }
+
+        public IReadOnlyList<string> Contributors { get; }
+    }
 }

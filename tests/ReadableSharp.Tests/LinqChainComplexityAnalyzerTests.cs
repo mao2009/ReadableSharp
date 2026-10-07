@@ -70,6 +70,33 @@ public sealed class LinqChainComplexityAnalyzerTests
     }
 
     [Fact]
+    public async Task StillAnalyzesLinqChainBeforeCustomTerminalMethod()
+    {
+        const string source = """
+            using System.Collections.Generic;
+            using System.Linq;
+
+            static class CustomExtensions
+            {
+                public static IEnumerable<T> Tap<T>(this IEnumerable<T> source) => source;
+            }
+
+            class C
+            {
+                IEnumerable<string> M(int[] values) =>
+                    values.Where(x => x > 0).Select(x => x.ToString()).Tap();
+            }
+            """;
+
+        var diagnostics = await AnalyzerTestHarness.GetDiagnosticsAsync(
+            source,
+            new LinqChainComplexityAnalyzer(),
+            new Dictionary<string, string> { ["readablesharp_rsharp1003.max_complexity"] = "2" });
+
+        Assert.Single(diagnostics);
+    }
+
+    [Fact]
     public async Task HonorsConfiguredLimit()
     {
         const string source = """
